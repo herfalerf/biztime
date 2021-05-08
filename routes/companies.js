@@ -40,8 +40,6 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-module.exports = router;
-
 router.put("/:code", async (req, res, next) => {
   try {
     const { code } = req.params;
@@ -58,3 +56,16 @@ router.put("/:code", async (req, res, next) => {
     return next(e);
   }
 });
+
+router.delete("/:code", async (req, res, next) => {
+  try {
+    const results = db.query("DELETE FROM companies WHERE code=$1", [
+      req.params.code,
+    ]);
+    return res.send({ msg: "DELETED!" });
+  } catch (e) {
+    return next(e);
+  }
+});
+
+module.exports = router;
