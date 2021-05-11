@@ -5,7 +5,9 @@ const db = require("../db");
 
 router.get("/", async (req, res, next) => {
   try {
-    const results = await db.query(`SELECT * FROM invoices`);
+    const results = await db.query(
+      `SELECT id, comp_code, amt, paid, add_date, paid_date FROM invoices`
+    );
     return res.json(results.rows);
   } catch (e) {
     return next(e);
@@ -70,8 +72,10 @@ router.put("/:id", async (req, res, next) => {
     const { id } = req.params;
     const { comp_code, amt, paid, paid_date } = req.body;
     const results = await db.query(
-      "UPDATE invoices SET comp_code=$1, amt=$2, paid=$3, paid_date=$4 WHERE id = $5 RETURNING id, comp_code, amt, paid, paid_date"
+      "UPDATE invoices SET comp_code=$1, amt=$2, paid=$3, paid_date=$4 WHERE id = $5 RETURNING id, comp_code, amt, paid, paid_date",
+      [comp_code, amt, paid, paid_date, id]
     );
+    return res.json({ invoice: results.rows });
   } catch (e) {
     return next(e);
   }
@@ -79,9 +83,12 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    const results = db.query("DELETE FROM invoices WHERE id = $1", [
+    const results = await db.query("DELETE FROM invoices WHERE id = $1", [
       req.params.id,
     ]);
+    if (results.rowCount === 0) {
+      throw new ExpressError(`Invoice not found`, 404);
+    }
     return res.send({ msg: "DELETED!" });
   } catch (e) {
     return next(e);

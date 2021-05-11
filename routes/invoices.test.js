@@ -39,3 +39,65 @@ describe("GET /invoices", () => {
     expect(res.body).toEqual([testInvoice]);
   });
 });
+
+describe("GET /invoices/:id", () => {
+  test("Get a single invoice by ID", async () => {
+    const res = await request(app).get(`/invoices/${testInvoice.id}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.invoice).toEqual({
+      add_date: "2021-05-10T05:00:00.000Z",
+      amt: 25,
+      company: { code: "add", description: "Three stripes", name: "Adidas" },
+      id: testInvoice.id,
+      paid: false,
+      paid_date: null,
+    });
+  });
+});
+
+describe("POST /invoices", () => {
+  test("create a new invoice", async () => {
+    const res = await request(app)
+      .post("/invoices")
+      .send({ comp_code: "add", amt: 40, paid: false, paid_date: null });
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toEqual({
+      invoice: {
+        add_date: "2021-05-10T05:00:00.000Z",
+        amt: 40,
+        comp_code: "add",
+        id: expect.any(Number),
+        paid: false,
+        paid_date: null,
+      },
+    });
+  });
+});
+
+describe("PUT /invoices/:id", () => {
+  test("Updates a single invoice", async () => {
+    const res = await request(app)
+      .put(`/invoices/${testInvoice.id}`)
+      .send({ comp_code: "add", amt: 1000, paid: false, paid_date: null });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({
+      invoice: [
+        {
+          amt: 1000,
+          comp_code: "add",
+          id: expect.any(Number),
+          paid: false,
+          paid_date: null,
+        },
+      ],
+    });
+  });
+});
+
+describe("DELETE /invoices/:id", () => {
+  test("Deletes a single invoice", async () => {
+    const res = await request(app).delete(`/invoices/${testInvoice.id}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ msg: "DELETED!" });
+  });
+});
