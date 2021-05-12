@@ -61,3 +61,10 @@ VALUES
   ('jpmorgan', 'acct'),
   ('nike', 'clothes');
 
+SELECT c.code, c.name, c.description, i.industry
+FROM companies AS c
+LEFT JOIN companies_industries AS ci 
+ON c.code = ci.comp_code
+LEFT JOIN industries AS i 
+ON ci.ind_code = i.code;
+WHERE c.code = 'apple'
