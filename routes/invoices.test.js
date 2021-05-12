@@ -45,7 +45,7 @@ describe("GET /invoices/:id", () => {
     const res = await request(app).get(`/invoices/${testInvoice.id}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.invoice).toEqual({
-      add_date: "2021-05-10T05:00:00.000Z",
+      add_date: expect.anything(),
       amt: 25,
       company: { code: "add", description: "Three stripes", name: "Adidas" },
       id: testInvoice.id,
@@ -63,7 +63,7 @@ describe("POST /invoices", () => {
     expect(res.statusCode).toBe(201);
     expect(res.body).toEqual({
       invoice: {
-        add_date: "2021-05-10T05:00:00.000Z",
+        add_date: expect.anything(),
         amt: 40,
         comp_code: "add",
         id: expect.any(Number),

@@ -57,13 +57,16 @@ describe("GET /companies/:code", () => {
 describe("POST /companies", () => {
   test("Creates a single company", async () => {
     const res = await request(app).post("/companies").send({
-      code: "shack",
       name: "RadioShack",
       description: "The Shack",
     });
     expect(res.statusCode).toBe(201);
     expect(res.body).toEqual({
-      company: { code: "shack", name: "RadioShack", description: "The Shack" },
+      company: {
+        code: "RadioShack",
+        name: "RadioShack",
+        description: "The Shack",
+      },
     });
   });
 });
