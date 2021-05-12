@@ -46,9 +46,10 @@ describe("GET /companies/:code", () => {
     expect(res.body).toEqual({
       company: {
         code: testCompany.code,
-        description: testCompany.description,
-        invoices: [testInvoice.id],
         name: testCompany.name,
+        description: testCompany.description,
+        industries: [null],
+        invoices: [testInvoice.id],
       },
     });
   });
